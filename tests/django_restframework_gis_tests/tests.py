@@ -219,13 +219,13 @@ class TestRestFrameworkGis(TestCase):
             "geometry": ['a', 'b', 'c']
         }
         response = self.client.post(self.location_list_url, data=json.dumps(data), content_type='application/json')
-        self.assertEqual(response.data['geometry'][0][0:65], self.type_error_message)
+        self.assertEqual(response.data['geometry'][0][:65], self.type_error_message)
         data = {
             "name": "very wrong",
             "geometry": False
         }
         response = self.client.post(self.location_list_url, data=json.dumps(data), content_type='application/json')
-        self.assertEqual(response.data['geometry'][0][0:65], self.type_error_message)
+        self.assertEqual(response.data['geometry'][0][:65], self.type_error_message)
         data = {
             "name": "very wrong",
             "geometry": { "value": { "nested": ["yo"] } }

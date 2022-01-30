@@ -117,10 +117,7 @@ class LocationGeoFeatureMethodSerializer(gis_serializers.GeoFeatureModelSerializ
     new_geometry = gis_serializers.GeometrySerializerMethodField()
 
     def get_new_geometry(self, obj):
-        if obj.name.startswith('hidden'):
-            return Point(0., 0.)
-        else:
-            return obj.geometry
+        return Point(0., 0.) if obj.name.startswith('hidden') else obj.geometry
 
     class Meta:
         model = Location

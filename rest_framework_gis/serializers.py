@@ -67,13 +67,16 @@ class GeoFeatureModelSerializer(ModelSerializer):
 
         def add_to_fields(field_name):
             """Make sure the field is included in the fields"""
-            if hasattr(meta, 'fields') and meta.fields != '__all__':
-                if field_name not in meta.fields:
-                    if type(meta.fields) is tuple:
-                        additional_fields = (field_name,)
-                    else:
-                        additional_fields = [field_name]
-                    meta.fields += additional_fields
+            if (
+                hasattr(meta, 'fields')
+                and meta.fields != '__all__'
+                and field_name not in meta.fields
+            ):
+                if type(meta.fields) is tuple:
+                    additional_fields = (field_name,)
+                else:
+                    additional_fields = [field_name]
+                meta.fields += additional_fields
 
         check_excludes(meta.geo_field, 'geo_field')
         add_to_fields(meta.geo_field)
@@ -160,9 +163,7 @@ class GeoFeatureModelSerializer(ModelSerializer):
             if field.write_only:
                 continue
             value = field.get_attribute(instance)
-            representation = None
-            if value is not None:
-                representation = field.to_representation(value)
+            representation = field.to_representation(value) if value is not None else None
             properties[field.field_name] = representation
 
         return properties

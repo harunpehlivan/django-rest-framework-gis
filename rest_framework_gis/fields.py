@@ -99,11 +99,7 @@ class GeometryField(Field):
 class GeometrySerializerMethodField(SerializerMethodField):
     def to_representation(self, value):
         value = super(GeometrySerializerMethodField, self).to_representation(value)
-        if value is not None:
-            # we expect value to be a GEOSGeometry instance
-            return GeoJsonDict(value.geojson)
-        else:
-            return None
+        return GeoJsonDict(value.geojson) if value is not None else None
 
 
 class GeoJsonDict(OrderedDict):

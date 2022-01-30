@@ -55,13 +55,13 @@ class InBBoxFilter(BaseFilterBackend):
         except ValueError:
             raise ParseError('Invalid bbox string supplied for parameter {0}'.format(self.bbox_param))
 
-        x = Polygon.from_bbox((p1x, p1y, p2x, p2y))
-        return x
+        return Polygon.from_bbox((p1x, p1y, p2x, p2y))
 
     def filter_queryset(self, request, queryset, view):
         filter_field = getattr(view, 'bbox_filter_field', None)
-        include_overlapping = getattr(view, 'bbox_filter_include_overlapping', False)
-        if include_overlapping:
+        if include_overlapping := getattr(
+            view, 'bbox_filter_include_overlapping', False
+        ):
             geoDjango_filter = 'bboverlaps'
         else:
             geoDjango_filter = 'contained'
@@ -115,8 +115,7 @@ class TMSTileFilter(InBBoxFilter):
         except ValueError:
             raise ParseError('Invalid tile string supplied for parameter {0}'.format(self.tile_param))
 
-        bbox = Polygon.from_bbox(tile_edges(x, y, z))
-        return bbox
+        return Polygon.from_bbox(tile_edges(x, y, z))
 
 
 class DistanceToPointFilter(BaseFilterBackend):
@@ -133,8 +132,7 @@ class DistanceToPointFilter(BaseFilterBackend):
         except ValueError:
             raise ParseError('Invalid geometry string supplied for parameter {0}'.format(self.point_param))
 
-        p = Point(x, y)
-        return p
+        return Point(x, y)
 
     def dist_to_deg(self, distance, latitude):
         """
